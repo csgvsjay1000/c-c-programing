@@ -1,0 +1,180 @@
+本文属于转载，原文地址：http://www.linuxidc.com/Linux/2016-06/132262.htm
+
+由于大多数vim插件都可以在github上找到，而且通过git安装、删除、升级插件都异常简单，因此我们需要首先安装git工具，
+如果不知道git和github，可以先自行Google
+
+第一个插件pathogen
+
+为了不让插件安装后目录显得凌乱，我们很有必要安装一个管理插件的插件，这样功能的插件有好几个，这里只推荐一个pathogen
+项目地址
+https://github.com/tpope/vim-pathogen
+
+安装
+可以通过git安装，也可以直接下载插件文件，由于这个插件只有一个文件，我们选择后者，而该插件的说明文档上也是用的这种方法。
+
+mkdir -p ~/.vim/autoload ~/.vim/bundle && 
+curl -LSso ~/.vim/autoload/pathogen.vim https://tpo.pe/pathogen.vim
+
+然后，就没有然后，这个插件就安装完了。是不是觉得so easy! 不过先别急，我们还要对插件进行一些配置，用vim打开~/.vimrc，输入如下三行类容
+execute pathogen#infect()
+syntax on
+filetype plugin indent on
+
+保存退出，这个插件的安装配置就完成了，怎么验证插件有没有生效呢，别急，后面有的是机会验证。我们先来讲讲vim插件是个什么东西。
+
+此时你的~/.vim目录结构应该是这样的
+
+├── autoload
+│   └── pathogen.vim
+└── bundle
+
+可见~/.vim目录下是有两个目录，其中autoload放的是pathogen插件，所谓的插件其实就是一个脚本，当vim启动时，
+它会自动加载~/.vim/autoload目录下的脚本，由于你~/.vimrc里配置了execute pathogen#infect()，
+所以它会去自动的执行脚本里这个函数，至于这个函数是怎么实现的，我们不用管它，总之这个函数的功能就是去加载~/.vim/bundle目录下你安装的所有插件，
+pathogen的管理方法大致就是这样，而我们也看到，vim的插件其实就是一个脚本文件，丰富一点的还会带有说明文档等其它内容，后面我们碰到了再讲解。
+
+
+第二个 auto-pairs
+项目地址
+https://github.com/jiangmiao/auto-pairs（感兴趣的可以看）
+
+功能
+自动匹配括号、引号等
+
+安装
+git clone git://github.com/jiangmiao/auto-pairs.git ~/.vim/bundle/auto-pairs
+这样就将auto-pairs在github上的项目文件下载到了~/.vim/bundle/auto-pairs目录下
+
+测试
+随便打开一个文件，输入左括号'('，看右括号是不是自动出现了，然后删除左括号，看右括号是不是也被删除了。当然功能远不止这些，但常用的就这几点。
+
+第三个 NERDTree
+项目地址
+https://github.com/scrooloose/nerdtree
+
+功能
+显示目录树
+
+安装
+git clone https://github.com/scrooloose/nerdtree.git ~/.vim/bundle
+
+此时~/.vim/bundle/nerdtree下应该有如下几个目录和文件
+autoload
+doc
+lib
+nerdtree_plugin
+plugin
+README.markdown
+syntax
+
+测试
+用vim打开一个文件，在命令行模式下输入:NERDTree，然后回车，窗口左侧就出现了vim工作目录的目录树
+为了方便打开NERDTree，我们可以设置快捷键，打开~/.vimrc，插入如下一行
+map <C-n> :NERDTree<CR>
+这样，当打开vim时，只要输入ctrl+n即可打开NERDTree
+
+重点 ctags+taglist+omnicppcomplete
+
+ctags
+这个并不是插件，而是可执行程序，是用来对代码建索引，方便查找的，有些Linux版本是自带ctags的，如果没有，按如下方式安装
+sudo apt-get install ctags
+
+创建索引：在你代码的根目录执行如下命令，会生成一个tags文件，此时在代码根目录下打开一个文件（vim默认只加载工作目录下的tags文件），将光标置于一个函数或结构体名字上，
+按ctr+]即可跳转到该名称的定义处，如果出现多个选项，可以输入编号选择对应跳转的地方，按ctr+o可回到光标之前的位置
+ctags -R --sort=yes --c++-kinds=+p --fields=+iaS --extra=+q --language-force=C++
+
+taglist
+
+taglist是vim的一个插件，可以将代码内的函数、变量等按规律列出来，方便查找
+下载地址
+http://www.vim.org/scripts/script.php?script_id=273，或者直接按如下方式下载并安装
+cd ~/.vim/bundle && wget "http://www.vim.org/scripts/download_script.php?src_id=19574" -O taglist.zip && unzip taglist.zip -d taglist
+
+配置
+打开~/.vimrc，输入如下内容
+let Tlist_Show_One_File=1    " 只展示一个文件的taglist
+let Tlist_Exit_OnlyWindow=1  " 当taglist是最后以个窗口时自动退出
+let Tlist_Use_Right_Window=1 " 在右边显示taglist窗口
+let Tlist_Sort_Type="name"   " tag按名字排序
+
+OmniCppComplete
+
+这是一个对C++进行语法补全的插件，可以对函数、命名空间、类成员等进行补全，使用起来和绝大多数IDE差不多，
+不一样的是IDE为你做了很多你不知道的事情，而omni补全需要依赖tags文件，需要你用ctags命令自己生成
+
+可用如下命令直接下载并安装
+cd ~/.vim/bundle && wget "http://www.vim.org/scripts/download_script.php?src_id=7722" -O omnicppcomplete.zip && unzip omnicppcomplete.zip -d omnicppcomplete
+
+配置
+打开~/.vimrc文件，输入
+filetype plugin indent on
+set completeopt=longest,menu
+let OmniCpp_NamespaceSearch = 2     " search namespaces in the current buffer   and in included files
+let OmniCpp_ShowPrototypeInAbbr = 1 " 显示函数参数列表
+let OmniCpp_MayCompleteScope = 1    " 输入 :: 后自动补全
+let OmniCpp_DefaultNamespaces = ["std", "_GLIBCXX_STD"]
+
+通过按ctr+n和ctr+p可以对候选项进行上下选择。通过这种方式可以实现对函数、结构体的补全
+
+对STL补全
+上面的方式只能对自己的代码进行补全，是当我们要使用其它库比如STL甚至是第三方库时就无法补全，原因很简单，我们只对自己的代码建立了tags文件，
+想要对其它库进行补全，就必须对它们的源代码建立tags文件，所幸的是vim的插件编写者们早已解决了这个需求，并且他们专门针对STL头文件进行了修改，以便能更好的适应omni的补全，首先下载STL源代码，
+地址为http://www.vim.org/scripts/script.php?script_id=2358，可通过如下命令下载并解压
+mkdir -p ~/.vim/tags && cd ~/.vim/tags && wget "http://www.vim.org/scripts/download_script.php?src_id=9178" -O - | tar jxvf -
+这样就将STL的源码下载到了~/.vim/tags/cpp_src目录下，我们在该目录下执行ctags命令
+ctags -R --sort=yes --c++-kinds=+p --fields=+iaS --extra=+q --language-force=C++
+这样就生成了~/.vim/tags/cpp_src/tags这个文件，然后打开~/.vimrc进行如下设置
+set tags+=~/.vim/tags/cpp_src/tags
+
+该命令是设置tags文件的搜索路径，默认只有vim工作目录的tags文件，这样设置之后就会同时加载指定目录的tags文件，
+你可以在后面添加更多其它第三方库的tags文件，现在对STL的补全效果如下
+
+omnicppcomplete触发补全需要用到ctr+x ctr+o，显然这是不友好的，熟悉Linux命令行的人一定对shell命令的补全印象深刻，
+只需要按一下TAB键就可以进行补全，
+vim插件的强大之处在于，它可以实现你几乎所有的需求，想要用TAB键进行补全，就需要用到SuperTab
+
+SuperTab
+
+项目地址
+https://github.com/ervandew/supertab
+
+安装
+使用git进行安装是最方便的
+
+cd ~/.vim/bundle && git clone https://github.com/ervandew/supertab.git
+
+测试
+无需任何配置即可使用，这时你想要补全变量名或函数名只需按一下TAB键即可，出现候选窗口之后也可以用TAB键进行选择，这样是不是方便了很多！
+
+由于TAB键被映射成了补全快捷键，也就无法通过TAB键直接输入制表符，这时如果想要输入制表符可以通过ctr+v TAB即可，即先输入ctr+v再输入TAB键，
+在vim下通过ctl+v可以输入很多不可见字符，比如试试ctr+v ctr+w
+
+最终的配置文件
+
+装了这么多插件，在配置文件~/.vimrc里也增添了不少内容，最后你的配置文件至少应该包含以下内容
+
+set tags+=~/.vim/tags/cpp_src/tags   " 设置tags搜索路径
+syntax on
+filetype plugin indent on
+
+map <C-n> :NERDTree<CR>
+
+" pathongen
+execute pathogen#infect()
+
+" taglist
+let Tlist_Show_One_File=1
+let Tlist_Exit_OnlyWindow=1
+let Tlist_Use_Right_Window=1
+let Tlist_Sort_Type="name"
+
+" omnicppcomplete
+set completeopt=longest,menu
+let OmniCpp_NamespaceSearch = 2     " search namespaces in the current buffer and in included files
+let OmniCpp_ShowPrototypeInAbbr = 1 " 显示函数参数列表
+let OmniCpp_MayCompleteScope = 1    " 输入 :: 后自动补全
+let OmniCpp_DefaultNamespaces = ["std", "_GLIBCXX_STD"]
+这个配置文件全都是和插件相关的配置，你还可以在里面添加其它配置来灵活定制你的vim，由于本文主要介绍插件相关内容，就不展开介绍了
+
+
+
