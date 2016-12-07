@@ -15,3 +15,14 @@ lib:test.o
 	ar cr libtest.a test.o
 clean:
 	rm -rf *.o *.a
+	
+	
+	
+	
+	
+	
+Ld DerivedData/pro/Build/Products/Debug-iphonesimulator/pro.app/pro normal x86_64
+    cd /Users/feng/Desktop/电子书/unix_ueap/pro
+    export IPHONEOS_DEPLOYMENT_TARGET=9.2
+    export PATH="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator9.2.sdk -L/Users/feng/Desktop/电子书/unix_ueap/pro/DerivedData/pro/Build/Products/Debug-iphonesimulator -L/Users/feng/Desktop/电子书/unix_ueap/pro/pro -F/Users/feng/Desktop/电子书/unix_ueap/pro/DerivedData/pro/Build/Products/Debug-iphonesimulator -filelist /Users/feng/Desktop/电子书/unix_ueap/pro/DerivedData/pro/Build/Intermediates/pro.build/Debug-iphonesimulator/pro.build/Objects-normal/x86_64/pro.LinkFileList -Xlinker -rpath -Xlinker @executable_path/Frameworks -mios-simulator-version-min=9.2 -Xlinker -objc_abi_version -Xlinker 2 -stdlib=libc++ -fobjc-arc -fobjc-link-runtime -lprotobuff -Xlinker -dependency_info -Xlinker /Users/feng/Desktop/电子书/unix_ueap/pro/DerivedData/pro/Build/Intermediates/pro.build/Debug-iphonesimulator/pro.build/Objects-normal/x86_64/pro_dependency_info.dat -o /Users/feng/Desktop/电子书/unix_ueap/pro/DerivedData/pro/Build/Products/Debug-iphonesimulator/pro.app/pro
