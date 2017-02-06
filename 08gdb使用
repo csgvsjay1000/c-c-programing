@@ -1,0 +1,7 @@
+命令gdb 启用gdb
+file ./login_server     读取执行文件
+break 设置断点命令，如：break main 
+r 开始运行命令
+s 下一步命令
+p 打印命令，打印变量，p http_port
+quit 退出命令
